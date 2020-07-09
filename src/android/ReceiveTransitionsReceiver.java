@@ -41,7 +41,7 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
         Logger.setLogger(new Logger(GeofencePlugin.TAG, context, false));
         Logger logger = Logger.getLogger();
         logger.log(Log.DEBUG, "ReceiveTransitionsIntentService - onHandleIntent");
-        //Intent broadcastIntent = new Intent(GeofenceTransitionIntent);
+        Intent broadcastIntent = new Intent(GeofenceTransitionIntent);
         notifier = new GeoNotificationNotifier(
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE),
                 context
@@ -56,7 +56,7 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
             String error = "Location Services error: " + Integer.toString(errorCode);
             // Log the error
             logger.log(Log.ERROR, error);
-            //broadcastIntent.putExtra("error", error);
+            broadcastIntent.putExtra("error", error);
         } else {
             // Get the type of transition (entry or exit)
             int transitionType = geofencingEvent.getGeofenceTransition();
@@ -90,24 +90,24 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
                         }
                     }
 
-                    //broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
+                    broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
                     GeofencePlugin.onTransitionReceived(geoNotifications);
                 }
             } else if (transitionType == Geofence.GEOFENCE_TRANSITION_DWELL) {
                 logger.log(Log.DEBUG, "Geofence transition dwell detected");
 
                 if (geoNotifications.size() > 0) {
-                    //broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
+                    broadcastIntent.putExtra("transitionData", Gson.get().toJson(geoNotifications));
                     GeofencePlugin.onTransitionReceived(geoNotifications);
                 }
             } else {
                 String error = "Geofence transition error: " + transitionType;
                 logger.log(Log.ERROR, error);
-                //broadcastIntent.putExtra("error", error);
+                broadcastIntent.putExtra("error", error);
             }
 
 
-            //sendBroadcast(broadcastIntent);
+            context.sendBroadcast(broadcastIntent);
 
             for (GeoNotification geoNotification : geoNotifications) {
                 if (geoNotification.url != null) {
