@@ -42,6 +42,11 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
         Logger logger = Logger.getLogger();
         logger.log(Log.DEBUG, "ReceiveTransitionsIntentService - onHandleIntent");
         Intent broadcastIntent = new Intent(GeofenceTransitionIntent);
+
+        // Required for implicit BroadcastReceiver to work for SDK 26+
+        String packageName = context.getPackageName();
+        broadcastIntent.setPackage(packageName);
+
         notifier = new GeoNotificationNotifier(
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE),
                 context
