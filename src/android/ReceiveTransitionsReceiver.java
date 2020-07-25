@@ -79,7 +79,9 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
                 }
             }
 
-            broadcastIntent.putExtra("triggerLocation", geofencingEvent.getTriggeringLocation());
+            if (geofencingEvent.getTriggeringLocation() != null) {
+                broadcastIntent.putExtra("triggerLocation", geofencingEvent.getTriggeringLocation());
+            }
 
             if (transitionType == Geofence.GEOFENCE_TRANSITION_ENTER
                     || transitionType == Geofence.GEOFENCE_TRANSITION_EXIT) {
