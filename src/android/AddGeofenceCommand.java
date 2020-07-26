@@ -24,15 +24,27 @@ import java.util.List;
 import java.util.Map;
 
 public class AddGeofenceCommand extends AbstractGoogleServiceCommand {
+    // https://developers.google.com/android/reference/com/google/android/gms/location/GeofencingRequest.Builder#public-geofencingrequest.builder-setinitialtrigger-int-initialtrigger
+    public static final int INITIAL_TRIGGER_NONE = 0;
+
     private List<Geofence> geofencesToAdd;
     private PendingIntent pendingIntent;
+    private int initialTrigger;
 
     public AddGeofenceCommand(Context context, PendingIntent pendingIntent,
                               List<Geofence> geofencesToAdd) {
+        this(context, pendingIntent, geofencesToAdd, INITIAL_TRIGGER_NONE);
+    }
+
+    public AddGeofenceCommand(Context context, PendingIntent pendingIntent,
+                              List<Geofence> geofencesToAdd,
+                              int initialTrigger) {
         super(context);
         this.geofencesToAdd = geofencesToAdd;
         this.pendingIntent = pendingIntent;
+        this.initialTrigger = initialTrigger;
     }
+
 
     @Override
     public void ExecuteCustomCode() {
@@ -40,7 +52,7 @@ public class AddGeofenceCommand extends AbstractGoogleServiceCommand {
         if (geofencesToAdd != null && geofencesToAdd.size() > 0) {
             try {
                 GeofencingRequest.Builder requestBuilder = new GeofencingRequest.Builder();
-                requestBuilder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER);
+                requestBuilder.setInitialTrigger(this.initialTrigger);
                 requestBuilder.addGeofences(geofencesToAdd);
 
                 GeofencingClient geofencingClient = LocationServices.getGeofencingClient(this.context);
@@ -65,27 +77,32 @@ public class AddGeofenceCommand extends AbstractGoogleServiceCommand {
                                     JSONObject error = new JSONObject();
                                     error.put("message", message);
 
-    //                                if (statusCode == GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE) {
-    //                                    error.put("code", GeofencePlugin.ERROR_GEOFENCE_NOT_AVAILABLE);
-    //                                } else if (statusCode == GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES) {
-    //                                    error.put("code", GeofencePlugin.ERROR_GEOFENCE_LIMIT_EXCEEDED);
-    //                                } else {
-    //                                    error.put("code", GeofencePlugin.ERROR_UNKNOWN);
-    //                                }
+//                                    if (statusCode == GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE) {
+//                                        error.put("code", GeofencePlugin.ERROR_GEOFENCE_NOT_AVAILABLE);
+//                                    }
+//                                    else if (statusCode == GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES) {
+//                                        error.put("code", GeofencePlugin.ERROR_GEOFENCE_LIMIT_EXCEEDED);
+//                                    }
+//                                    else {
+//                                        error.put("code", GeofencePlugin.ERROR_UNKNOWN);
+//                                    }
 
                                     logger.log(Log.ERROR, message);
                                     CommandExecuted(error);
-                                } catch (JSONException exception) {
+                                }
+                                catch (JSONException exception) {
                                     CommandExecuted(exception);
                                 }
                             }
                         });
-            } catch (Exception exception) {
+            }
+            catch (Exception exception) {
                 logger.log(LOG.ERROR, "Exception while adding geofences");
                 exception.printStackTrace();
                 CommandExecuted(exception);
             }
-        } else {
+        }
+        else {
             logger.log(Log.DEBUG, "Nothing to add");
             CommandExecuted();
         }

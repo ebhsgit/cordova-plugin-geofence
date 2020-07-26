@@ -14,6 +14,8 @@ import org.apache.cordova.CallbackContext;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.cowbell.cordova.geofence.AddGeofenceCommand.INITIAL_TRIGGER_NONE;
+
 public class GeoNotificationManager {
     private Context context;
     private GeoNotificationStore geoNotificationStore;
@@ -30,7 +32,8 @@ public class GeoNotificationManager {
         pendingIntent = getTransitionPendingIntent();
         if (areGoogleServicesAvailable()) {
             logger.log(Log.DEBUG, "Google play services available");
-        } else {
+        }
+        else {
             logger.log(Log.WARN, "Google play services not available. Geofence plugin will not work correctly.");
         }
     }
@@ -43,7 +46,7 @@ public class GeoNotificationManager {
         }
         if (!geoFences.isEmpty()) {
             googleServiceCommandExecutor.QueueToExecute(
-                new AddGeofenceCommand(context, pendingIntent, geoFences)
+                    new AddGeofenceCommand(context, pendingIntent, geoFences)
             );
         }
     }
@@ -59,22 +62,30 @@ public class GeoNotificationManager {
 
         if (ConnectionResult.SUCCESS == resultCode) {
             return true;
-        } else {
+        }
+        else {
             return false;
         }
     }
 
     public void addGeoNotifications(List<GeoNotification> geoNotifications,
                                     final CallbackContext callback) {
+        this.addGeoNotifications(geoNotifications, callback, INITIAL_TRIGGER_NONE);
+    }
+
+    public void addGeoNotifications(List<GeoNotification> geoNotifications,
+                                    final CallbackContext callback,
+                                    int initialTrigger) {
         List<Geofence> newGeofences = new ArrayList<Geofence>();
         for (GeoNotification geo : geoNotifications) {
             geoNotificationStore.setGeoNotification(geo);
             newGeofences.add(geo.toGeofence());
         }
         AddGeofenceCommand geoFenceCmd = new AddGeofenceCommand(
-            context,
-            pendingIntent,
-            newGeofences
+                context,
+                pendingIntent,
+                newGeofences,
+                initialTrigger
         );
         if (callback != null) {
             geoFenceCmd.addListener(new CommandExecutionHandler(callback));
