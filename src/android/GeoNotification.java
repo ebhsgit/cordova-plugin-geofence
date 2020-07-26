@@ -81,4 +81,17 @@ public class GeoNotification {
             return null;
         }
     }
+
+    public String getTransitionTypeString() {
+        switch (transitionType) {
+            case 1:
+                return "Enter";
+            case 2:
+                return "Exit";
+            case 4:
+                return "Dwell";
+            default:
+                return "Unknown";
+        }
+    }
 }
