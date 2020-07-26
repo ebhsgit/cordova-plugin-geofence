@@ -46,7 +46,7 @@ public class GeoNotificationManager {
         }
         if (!geoFences.isEmpty()) {
             googleServiceCommandExecutor.QueueToExecute(
-                    new AddGeofenceCommand(context, pendingIntent, geoFences)
+                    new AddGeofenceCommand(context, pendingIntent, geoFences, INITIAL_TRIGGER_NONE)
             );
         }
     }
@@ -70,12 +70,6 @@ public class GeoNotificationManager {
 
     public void addGeoNotifications(List<GeoNotification> geoNotifications,
                                     final CallbackContext callback) {
-        this.addGeoNotifications(geoNotifications, callback, INITIAL_TRIGGER_NONE);
-    }
-
-    public void addGeoNotifications(List<GeoNotification> geoNotifications,
-                                    final CallbackContext callback,
-                                    int initialTrigger) {
         List<Geofence> newGeofences = new ArrayList<Geofence>();
         for (GeoNotification geo : geoNotifications) {
             geoNotificationStore.setGeoNotification(geo);
@@ -84,8 +78,7 @@ public class GeoNotificationManager {
         AddGeofenceCommand geoFenceCmd = new AddGeofenceCommand(
                 context,
                 pendingIntent,
-                newGeofences,
-                initialTrigger
+                newGeofences
         );
         if (callback != null) {
             geoFenceCmd.addListener(new CommandExecutionHandler(callback));

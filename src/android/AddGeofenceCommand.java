@@ -33,7 +33,7 @@ public class AddGeofenceCommand extends AbstractGoogleServiceCommand {
 
     public AddGeofenceCommand(Context context, PendingIntent pendingIntent,
                               List<Geofence> geofencesToAdd) {
-        this(context, pendingIntent, geofencesToAdd, INITIAL_TRIGGER_NONE);
+        this(context, pendingIntent, geofencesToAdd, GeofencingRequest.INITIAL_TRIGGER_ENTER);
     }
 
     public AddGeofenceCommand(Context context, PendingIntent pendingIntent,
