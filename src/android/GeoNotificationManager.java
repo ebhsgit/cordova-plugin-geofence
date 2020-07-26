@@ -8,6 +8,7 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.Geofence;
+import com.google.android.gms.location.GeofencingRequest;
 
 import org.apache.cordova.CallbackContext;
 
@@ -70,6 +71,12 @@ public class GeoNotificationManager {
 
     public void addGeoNotifications(List<GeoNotification> geoNotifications,
                                     final CallbackContext callback) {
+        this.addGeoNotifications(geoNotifications, callback, GeofencingRequest.INITIAL_TRIGGER_ENTER);
+    }
+
+    public void addGeoNotifications(List<GeoNotification> geoNotifications,
+                                    final CallbackContext callback,
+                                    int initialTrigger) {
         List<Geofence> newGeofences = new ArrayList<Geofence>();
         for (GeoNotification geo : geoNotifications) {
             geoNotificationStore.setGeoNotification(geo);
@@ -78,7 +85,8 @@ public class GeoNotificationManager {
         AddGeofenceCommand geoFenceCmd = new AddGeofenceCommand(
                 context,
                 pendingIntent,
-                newGeofences
+                newGeofences,
+                initialTrigger
         );
         if (callback != null) {
             geoFenceCmd.addListener(new CommandExecutionHandler(callback));
