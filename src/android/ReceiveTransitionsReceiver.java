@@ -115,7 +115,9 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
                 broadcastIntent.putExtra("error", error);
             }
 
-
+            broadcastIntent.putExtra("trigger_listSize", triggerList.size());
+            broadcastIntent.putExtra("trigger_transitionType", transitionType);
+            
             context.sendBroadcast(broadcastIntent);
 
             for (GeoNotification geoNotification : geoNotifications) {
