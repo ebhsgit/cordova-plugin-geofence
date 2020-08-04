@@ -28,7 +28,7 @@ public class GeoNotificationManager {
     public GeoNotificationManager(Context context) {
         this.context = context;
         geoNotificationStore = new GeoNotificationStore(context);
-        logger = Logger.getLogger();
+        logger = Logger.getLogger(context);
         googleServiceCommandExecutor = new GoogleServiceCommandExecutor();
         pendingIntent = getTransitionPendingIntent();
         if (areGoogleServicesAvailable()) {
