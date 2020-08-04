@@ -160,7 +160,15 @@ public class ReceiveTransitionsReceiver extends BroadcastReceiver {
         }
         catch (Exception e) {
             logger.log(e.getMessage(), e);
-            broadcastIntent.putExtra("error", e.getMessage());
+
+            String errMsg = e.getMessage();
+            if (e.getStackTrace().length > 0) {
+                StackTraceElement stackTrace_line1 = e.getStackTrace()[0];
+                String stackStr = String.format("Class: %s, Line: %s", stackTrace_line1.getClassName(), stackTrace_line1.getLineNumber());
+                errMsg = String.format("%s\nStack - %s", errMsg, stackStr);
+            }
+
+            broadcastIntent.putExtra("error", errMsg);
         }
 
         context.sendBroadcast(broadcastIntent);
