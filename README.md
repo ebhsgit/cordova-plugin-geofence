@@ -4,7 +4,17 @@
 
 Plugin to monitor circular geofences using mobile devices. The purpose is to notify user if crossing the boundary of the monitored geofence.
 
-*Geofences persist after device reboot. You do not have to open your app first to monitor added geofences*
+## Reloading geofences when required
+The geofences are persisted between device boots.
+Get geofences persisted from GeoNotificationStore.
+
+The consumer of this plugin needs to handle when to reload geofences
+* Device boot
+* Google Play Service data cleared
+* App data cleared
+* App uninstall and then reinstall
+* When NLP is disabled
+[Android doc](https://developer.android.com/training/location/geofencing#re-register-geofences-only-when-required)
 
 ## Example applications
 
