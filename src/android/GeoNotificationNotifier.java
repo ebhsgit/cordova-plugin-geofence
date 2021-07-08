@@ -13,6 +13,9 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 public class GeoNotificationNotifier {
+    private static final String channelId = "geofence-notifications";
+    private static final String channelName = "Geofence Notifications";
+
     private NotificationManager notificationManager;
     private Context context;
     private BeepHelper beepHelper;
@@ -26,7 +29,7 @@ public class GeoNotificationNotifier {
         this.logger = Logger.getLogger();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel("channelId", "channelName", NotificationManager.IMPORTANCE_DEFAULT);
+            notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_DEFAULT);
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
