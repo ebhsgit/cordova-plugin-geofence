@@ -8,8 +8,10 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.TaskStackBuilder;
+
+import android.os.Build;
 import android.util.Log;
 
 public class GeoNotificationNotifier {
@@ -62,11 +64,15 @@ public class GeoNotificationNotifier {
 
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
+            int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                flags = flags | PendingIntent.FLAG_IMMUTABLE;
+            }
             PendingIntent resultPendingIntent =
                     PendingIntent.getActivity(context,
                             notification.id,
                             resultIntent,
-                            PendingIntent.FLAG_UPDATE_CURRENT
+                            flags
                     );
 
             mBuilder.setContentIntent(resultPendingIntent);
